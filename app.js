@@ -22,7 +22,8 @@
   const endCalBtn   = document.getElementById('end-cal-btn');
   const startError  = document.getElementById('start-error');
   const endError    = document.getElementById('end-error');
-  const includeStartCb = document.getElementById('include-start');
+  const includeStartCb   = document.getElementById('include-start');
+  const additionalDataCb = document.getElementById('additional-data');
   const resultArea     = document.getElementById('result-area');
   const resultPlaceholder = document.getElementById('result-placeholder');
   const resultDisplay  = document.getElementById('result-display');
@@ -30,6 +31,12 @@
   const resultLabel    = document.getElementById('result-label');
   const resultRange    = document.getElementById('result-range');
   const arrowDivider   = document.querySelector('.arrow-divider');
+  const breakdownGrid  = document.getElementById('breakdown-grid');
+  const bdYears        = document.getElementById('bd-years');
+  const bdMonths       = document.getElementById('bd-months');
+  const bdHours        = document.getElementById('bd-hours');
+  const bdMinutes      = document.getElementById('bd-minutes');
+  const bdSeconds      = document.getElementById('bd-seconds');
 
   // ── State ───────────────────────────────────────────────
   let startDate = null; // JS Date (midnight local)
@@ -155,6 +162,20 @@
     return Math.round(Math.abs(b.getTime() - a.getTime()) / msPerDay);
   }
 
+  /** Break down a day count into equivalent years, months, hours, minutes, seconds. */
+  const DAYS_PER_YEAR  = 365.2425;
+  const DAYS_PER_MONTH = 30.436875;
+
+  function computeBreakdown(days) {
+    return {
+      years:   Math.floor(days / DAYS_PER_YEAR),
+      months:  Math.floor(days / DAYS_PER_MONTH),
+      hours:   days * 24,
+      minutes: days * 24 * 60,
+      seconds: days * 24 * 60 * 60,
+    };
+  }
+
   /** Format a Date for the result-range display. */
   const DISPLAY_OPTS = { year: 'numeric', month: 'long', day: 'numeric' };
   function displayDate(d) {
@@ -194,6 +215,19 @@
 
     resultPlaceholder.hidden = true;
     resultArea.classList.add('has-result');
+
+    // Additional data breakdown
+    if (additionalDataCb.checked) {
+      const bd = computeBreakdown(days);
+      bdYears.textContent   = bd.years.toLocaleString();
+      bdMonths.textContent  = bd.months.toLocaleString();
+      bdHours.textContent   = bd.hours.toLocaleString();
+      bdMinutes.textContent = bd.minutes.toLocaleString();
+      bdSeconds.textContent = bd.seconds.toLocaleString();
+      breakdownGrid.hidden  = false;
+    } else {
+      breakdownGrid.hidden = true;
+    }
 
     // Trigger animation
     requestAnimationFrame(() => {
@@ -305,8 +339,9 @@
     });
   }
 
-  // Checkbox toggle
+  // Checkbox toggles
   includeStartCb.addEventListener('change', update);
+  additionalDataCb.addEventListener('change', update);
 
   // Wire everything up
   wireTextInput(startText, startPicker, startError, true);

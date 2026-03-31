@@ -90,6 +90,13 @@
             </span>
             <span class="toggle-text">Include start date in count</span>
           </label>
+          <label class="toggle-label" for="additional-data">
+            <input type="checkbox" id="additional-data" class="toggle-input" />
+            <span class="toggle-track">
+              <span class="toggle-thumb"></span>
+            </span>
+            <span class="toggle-text">Additional data</span>
+          </label>
         </div>
 
         <!-- Result -->
@@ -99,6 +106,28 @@
             <div class="result-number" id="result-number"></div>
             <div class="result-label" id="result-label"></div>
             <div class="result-range" id="result-range"></div>
+            <div class="breakdown-grid" id="breakdown-grid" hidden>
+              <div class="breakdown-item">
+                <div class="breakdown-number" id="bd-years"></div>
+                <div class="breakdown-unit">Years</div>
+              </div>
+              <div class="breakdown-item">
+                <div class="breakdown-number" id="bd-months"></div>
+                <div class="breakdown-unit">Months</div>
+              </div>
+              <div class="breakdown-item">
+                <div class="breakdown-number" id="bd-hours"></div>
+                <div class="breakdown-unit">Hours</div>
+              </div>
+              <div class="breakdown-item">
+                <div class="breakdown-number" id="bd-minutes"></div>
+                <div class="breakdown-unit">Minutes</div>
+              </div>
+              <div class="breakdown-item">
+                <div class="breakdown-number" id="bd-seconds"></div>
+                <div class="breakdown-unit">Seconds</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
