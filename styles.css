@@ -172,8 +172,8 @@ body {
 }
 
 .date-input.has-value {
-  border-color: var(--cyan);
-  color: var(--cyan);
+  border-color: var(--purple);
+  color: var(--purple);
 }
 
 .date-input.error {
