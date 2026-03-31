@@ -200,15 +200,22 @@
     }
   }
 
-  function update() {
+  function update(allowSwap = true) {
     if (!startDate || !endDate) {
       showPlaceholder();
       arrowDivider.classList.remove('active');
       return;
     }
 
-    // Auto-swap if start is after end
+    // Auto-swap if start is after end — only when the user has committed a value
+    // (blur / Enter / calendar picker), not during live typing, to avoid
+    // disrupting a field that is still being edited.
     if (startDate > endDate) {
+      if (!allowSwap) {
+        showPlaceholder();
+        arrowDivider.classList.remove('active');
+        return;
+      }
       const tmp = startDate;
       startDate = endDate;
       endDate   = tmp;
@@ -339,7 +346,8 @@
         textEl.blur();
       }
     });
-    // Live feedback: update class while typing, and recalculate as soon as a valid date is recognised
+    // Live feedback: update class while typing, and recalculate as soon as a valid date is recognised.
+    // Pass allowSwap=false so the auto-swap never fires mid-entry (it fires on blur/Enter instead).
     textEl.addEventListener('input', () => {
       const raw = textEl.value.trim();
       if (raw) {
@@ -349,12 +357,12 @@
           if (isStart) { startDate = parsed; } else { endDate = parsed; }
           pickerEl.value = toPickerValue(parsed);
           errorEl.textContent = '';
-          update();
+          update(false);
         }
       } else {
         textEl.classList.remove('has-value');
         if (isStart) { startDate = null; } else { endDate = null; }
-        update();
+        update(false);
       }
     });
   }
