@@ -307,12 +307,22 @@
         textEl.blur();
       }
     });
-    // Live feedback: add has-value class while typing if something is entered
+    // Live feedback: update class while typing, and recalculate as soon as a valid date is recognised
     textEl.addEventListener('input', () => {
-      if (textEl.value.trim()) {
+      const raw = textEl.value.trim();
+      if (raw) {
         textEl.classList.add('has-value');
+        const parsed = parseDate(raw);
+        if (parsed) {
+          if (isStart) { startDate = parsed; } else { endDate = parsed; }
+          pickerEl.value = toPickerValue(parsed);
+          errorEl.textContent = '';
+          update();
+        }
       } else {
         textEl.classList.remove('has-value');
+        if (isStart) { startDate = null; } else { endDate = null; }
+        update();
       }
     });
   }
