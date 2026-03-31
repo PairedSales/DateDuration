@@ -41,7 +41,7 @@
   // ── State ───────────────────────────────────────────────
   let startDate    = null;  // JS Date (midnight local)
   let endDate      = null;  // JS Date (midnight local)
-  let includeStart = false; // whether start date is counted
+  let includeStart = true; // whether start date is counted
 
   // ── Helpers ─────────────────────────────────────────────
 
