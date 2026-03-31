@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DateDuration — Days Between Dates</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <h1 class="app-title">
+        <span class="title-icon">⏳</span>
+        DateDuration
+      </h1>
+      <p class="app-subtitle">Count the days between any two dates</p>
+    </header>
+
+    <main class="app-main">
+      <div class="card">
+        <div class="date-row">
+          <!-- Start Date -->
+          <div class="date-field" id="field-start">
+            <label class="field-label" for="start-text">Start Date</label>
+            <div class="input-group">
+              <input
+                type="text"
+                id="start-text"
+                class="date-input"
+                placeholder="MM/DD/YYYY"
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <button
+                class="cal-btn"
+                id="start-cal-btn"
+                aria-label="Open calendar for start date"
+                title="Pick a date"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              </button>
+              <input type="date" id="start-picker" class="date-picker-hidden" tabindex="-1" />
+            </div>
+            <div class="field-error" id="start-error" aria-live="polite"></div>
+          </div>
+
+          <div class="arrow-divider" aria-hidden="true">→</div>
+
+          <!-- End Date -->
+          <div class="date-field" id="field-end">
+            <label class="field-label" for="end-text">End Date</label>
+            <div class="input-group">
+              <input
+                type="text"
+                id="end-text"
+                class="date-input"
+                placeholder="MM/DD/YYYY"
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <button
+                class="cal-btn"
+                id="end-cal-btn"
+                aria-label="Open calendar for end date"
+                title="Pick a date"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              </button>
+              <input type="date" id="end-picker" class="date-picker-hidden" tabindex="-1" />
+            </div>
+            <div class="field-error" id="end-error" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <!-- Options -->
+        <div class="options-row">
+          <label class="toggle-label" for="include-start">
+            <input type="checkbox" id="include-start" class="toggle-input" />
+            <span class="toggle-track">
+              <span class="toggle-thumb"></span>
+            </span>
+            <span class="toggle-text">Include start date in count</span>
+          </label>
+        </div>
+
+        <!-- Result -->
+        <div class="result-area" id="result-area">
+          <div class="result-placeholder" id="result-placeholder">
+            Enter both dates to see the result
+          </div>
+          <div class="result-display" id="result-display" hidden>
+            <div class="result-number" id="result-number"></div>
+            <div class="result-label" id="result-label"></div>
+            <div class="result-range" id="result-range"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <p>Gregorian calendar &nbsp;·&nbsp; All calculations are local to your device</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

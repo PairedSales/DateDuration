@@ -1,0 +1,413 @@
+/* =========================================================
+   Dracula Color Palette
+   ========================================================= */
+:root {
+  --bg:         #282a36;
+  --bg-dark:    #1e2029;
+  --surface:    #21222c;
+  --surface2:   #343746;
+  --line:       #44475a;
+  --comment:    #6272a4;
+  --fg:         #f8f8f2;
+  --fg-dim:     #bdbdbd;
+  --cyan:       #8be9fd;
+  --green:      #50fa7b;
+  --orange:     #ffb86c;
+  --pink:       #ff79c6;
+  --purple:     #bd93f9;
+  --red:        #ff5555;
+  --yellow:     #f1fa8c;
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  20px;
+  --transition: 0.2s ease;
+}
+
+/* =========================================================
+   Reset & Base
+   ========================================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background: var(--bg-dark);
+  color: var(--fg);
+  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+
+  /* Subtle radial glow behind the card */
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(189,147,249,.12) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(139,233,253,.06) 0%, transparent 60%);
+}
+
+/* =========================================================
+   Layout
+   ========================================================= */
+.app {
+  width: 100%;
+  max-width: 740px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* =========================================================
+   Header
+   ========================================================= */
+.app-header {
+  text-align: center;
+}
+
+.app-title {
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--purple) 0%, var(--cyan) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.title-icon {
+  -webkit-text-fill-color: initial;
+  filter: drop-shadow(0 0 8px rgba(189,147,249,.6));
+}
+
+.app-subtitle {
+  margin-top: 0.4rem;
+  color: var(--comment);
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* =========================================================
+   Card
+   ========================================================= */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  box-shadow:
+    0 0 0 1px rgba(189,147,249,.08),
+    0 8px 32px rgba(0,0,0,.35),
+    0 2px 8px rgba(0,0,0,.25);
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* =========================================================
+   Date Row
+   ========================================================= */
+.date-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.date-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--comment);
+}
+
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.date-input {
+  flex: 1;
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-md);
+  color: var(--fg);
+  font-size: 1.05rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 600;
+  padding: 0.65rem 2.6rem 0.65rem 0.9rem;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  width: 100%;
+  letter-spacing: 0.02em;
+}
+
+.date-input::placeholder {
+  color: var(--line);
+  font-weight: 400;
+}
+
+.date-input:focus {
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px rgba(189,147,249,.18);
+}
+
+.date-input.has-value {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+.date-input.error {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(255,85,85,.18);
+  animation: shake 0.35s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-5px); }
+  40%       { transform: translateX(5px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(4px); }
+}
+
+/* Calendar button */
+.cal-btn {
+  position: absolute;
+  right: 0.4rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--comment);
+  padding: 0.3rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition), background var(--transition);
+}
+
+.cal-btn svg {
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+
+.cal-btn:hover {
+  color: var(--purple);
+  background: rgba(189,147,249,.12);
+}
+
+.cal-btn:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
+}
+
+/* Hidden native date picker — positioned under the button */
+.date-picker-hidden {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+  border: none;
+  padding: 0;
+}
+
+.field-error {
+  min-height: 1.1em;
+  font-size: 0.75rem;
+  color: var(--red);
+  font-weight: 500;
+}
+
+/* Arrow divider */
+.arrow-divider {
+  align-self: center;
+  margin-top: 1.6rem; /* vertically align with the input */
+  font-size: 1.4rem;
+  color: var(--comment);
+  flex-shrink: 0;
+  user-select: none;
+  transition: color var(--transition);
+}
+
+.arrow-divider.active {
+  color: var(--purple);
+}
+
+/* =========================================================
+   Options Row
+   ========================================================= */
+.options-row {
+  display: flex;
+  align-items: center;
+}
+
+/* Custom toggle switch */
+.toggle-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-track {
+  position: relative;
+  width: 42px;
+  height: 24px;
+  background: var(--line);
+  border-radius: 999px;
+  transition: background var(--transition);
+  flex-shrink: 0;
+}
+
+.toggle-input:checked + .toggle-track {
+  background: var(--purple);
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  background: var(--fg);
+  border-radius: 50%;
+  transition: transform var(--transition);
+  box-shadow: 0 1px 4px rgba(0,0,0,.3);
+}
+
+.toggle-input:checked + .toggle-track .toggle-thumb {
+  transform: translateX(18px);
+}
+
+.toggle-input:focus-visible + .toggle-track {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
+}
+
+.toggle-text {
+  color: var(--fg-dim);
+  font-size: 0.9rem;
+}
+
+/* =========================================================
+   Result Area
+   ========================================================= */
+.result-area {
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  border: 1.5px dashed var(--line);
+  padding: 1.75rem 1.5rem;
+  text-align: center;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.result-area.has-result {
+  border-style: solid;
+  border-color: var(--purple);
+  background: linear-gradient(135deg, rgba(189,147,249,.07) 0%, rgba(139,233,253,.04) 100%);
+}
+
+.result-placeholder {
+  color: var(--comment);
+  font-size: 0.95rem;
+}
+
+.result-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+  animation: fadeInUp 0.3s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.result-number {
+  font-size: clamp(3rem, 10vw, 5rem);
+  font-weight: 900;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--purple) 0%, var(--cyan) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.03em;
+}
+
+.result-label {
+  font-size: 0.8rem;
+  color: var(--fg-dim);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.result-range {
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
+  color: var(--comment);
+  font-family: 'Courier New', Courier, monospace;
+}
+
+/* =========================================================
+   Footer
+   ========================================================= */
+.app-footer {
+  text-align: center;
+  color: var(--comment);
+  font-size: 0.78rem;
+  opacity: 0.7;
+}
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+@media (max-width: 520px) {
+  .date-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .arrow-divider {
+    display: none;
+  }
+}
