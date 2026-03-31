@@ -22,7 +22,6 @@
   const endCalBtn   = document.getElementById('end-cal-btn');
   const startError  = document.getElementById('start-error');
   const endError    = document.getElementById('end-error');
-  const includeStartCb   = document.getElementById('include-start');
   const additionalDataCb = document.getElementById('additional-data');
   const resultArea     = document.getElementById('result-area');
   const resultPlaceholder = document.getElementById('result-placeholder');
@@ -30,6 +29,7 @@
   const resultNumber   = document.getElementById('result-number');
   const resultLabel    = document.getElementById('result-label');
   const resultRange    = document.getElementById('result-range');
+  const startDateBadge = document.getElementById('start-date-badge');
   const arrowDivider   = document.querySelector('.arrow-divider');
   const breakdownGrid  = document.getElementById('breakdown-grid');
   const bdYears        = document.getElementById('bd-years');
@@ -39,8 +39,9 @@
   const bdSeconds      = document.getElementById('bd-seconds');
 
   // ── State ───────────────────────────────────────────────
-  let startDate = null; // JS Date (midnight local)
-  let endDate   = null; // JS Date (midnight local)
+  let startDate    = null;  // JS Date (midnight local)
+  let endDate      = null;  // JS Date (midnight local)
+  let includeStart = false; // whether start date is counted
 
   // ── Helpers ─────────────────────────────────────────────
 
@@ -184,6 +185,21 @@
 
   // ── Core update ─────────────────────────────────────────
 
+  /** Sync the badge text and colour to the current includeStart state. */
+  function updateBadge() {
+    if (includeStart) {
+      startDateBadge.textContent = 'start date included';
+      startDateBadge.setAttribute('aria-label', 'Start date included in count — click to exclude');
+      startDateBadge.classList.add('included');
+      startDateBadge.classList.remove('excluded');
+    } else {
+      startDateBadge.textContent = 'start date excluded';
+      startDateBadge.setAttribute('aria-label', 'Start date excluded from count — click to include');
+      startDateBadge.classList.add('excluded');
+      startDateBadge.classList.remove('included');
+    }
+  }
+
   function update() {
     if (!startDate || !endDate) {
       showPlaceholder();
@@ -203,7 +219,6 @@
 
     arrowDivider.classList.add('active');
 
-    const includeStart = includeStartCb.checked;
     const days = daysBetween(startDate, endDate) + (includeStart ? 1 : 0);
 
     // Animate: briefly hide, then show with new value
@@ -215,6 +230,9 @@
 
     resultPlaceholder.hidden = true;
     resultArea.classList.add('has-result');
+
+    updateBadge();
+    startDateBadge.hidden = false;
 
     // Additional data breakdown
     if (additionalDataCb.checked) {
@@ -238,6 +256,7 @@
   function showPlaceholder() {
     resultDisplay.hidden     = true;
     resultPlaceholder.hidden = false;
+    startDateBadge.hidden    = true;
     resultArea.classList.remove('has-result');
   }
 
@@ -339,8 +358,13 @@
     });
   }
 
-  // Checkbox toggles
-  includeStartCb.addEventListener('change', update);
+  // Badge click — toggle start-date inclusion
+  startDateBadge.addEventListener('click', () => {
+    includeStart = !includeStart;
+    update();
+  });
+
+  // Additional data checkbox
   additionalDataCb.addEventListener('change', update);
 
   // Wire everything up
