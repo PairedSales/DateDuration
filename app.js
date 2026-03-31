@@ -22,7 +22,7 @@
   const endCalBtn   = document.getElementById('end-cal-btn');
   const startError  = document.getElementById('start-error');
   const endError    = document.getElementById('end-error');
-  const additionalDataCb = document.getElementById('additional-data');
+  const additionalDataBadge = document.getElementById('additional-data-badge');
   const resultArea     = document.getElementById('result-area');
   const resultPlaceholder = document.getElementById('result-placeholder');
   const resultDisplay  = document.getElementById('result-display');
@@ -234,8 +234,20 @@
     updateBadge();
     startDateBadge.hidden = false;
 
+    // Additional data badge
+    additionalDataBadge.hidden = false;
+    if (showAdditional) {
+      additionalDataBadge.classList.add('active');
+      additionalDataBadge.classList.remove('inactive');
+      additionalDataBadge.setAttribute('aria-label', 'Additional data shown — click to hide');
+    } else {
+      additionalDataBadge.classList.add('inactive');
+      additionalDataBadge.classList.remove('active');
+      additionalDataBadge.setAttribute('aria-label', 'Additional data hidden — click to show');
+    }
+
     // Additional data breakdown
-    if (additionalDataCb.checked) {
+    if (showAdditional) {
       const bd = computeBreakdown(days);
       bdYears.textContent   = bd.years.toLocaleString();
       bdMonths.textContent  = bd.months.toLocaleString();
@@ -257,6 +269,7 @@
     resultDisplay.hidden     = true;
     resultPlaceholder.hidden = false;
     startDateBadge.hidden    = true;
+    additionalDataBadge.hidden = true;
     resultArea.classList.remove('has-result');
   }
 
@@ -374,8 +387,11 @@
     update();
   });
 
-  // Additional data checkbox
-  additionalDataCb.addEventListener('change', update);
+  // Additional data badge click — toggle breakdown
+  additionalDataBadge.addEventListener('click', () => {
+    showAdditional = !showAdditional;
+    update();
+  });
 
   // Wire everything up
   wireTextInput(startText, startPicker, startError, true);

@@ -262,76 +262,6 @@ body {
 }
 
 /* =========================================================
-   Options Row
-   ========================================================= */
-.options-row {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.options-row .toggle-label:last-child {
-  margin-left: auto;
-}
-
-/* Custom toggle switch */
-.toggle-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-  cursor: pointer;
-  user-select: none;
-}
-
-.toggle-input {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.toggle-track {
-  position: relative;
-  width: 42px;
-  height: 24px;
-  background: var(--line);
-  border-radius: 999px;
-  transition: background var(--transition);
-  flex-shrink: 0;
-}
-
-.toggle-input:checked + .toggle-track {
-  background: var(--purple);
-}
-
-.toggle-thumb {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 18px;
-  height: 18px;
-  background: var(--fg);
-  border-radius: 50%;
-  transition: transform var(--transition);
-  box-shadow: 0 1px 4px rgba(0,0,0,.3);
-}
-
-.toggle-input:checked + .toggle-track .toggle-thumb {
-  transform: translateX(18px);
-}
-
-.toggle-input:focus-visible + .toggle-track {
-  outline: 2px solid var(--purple);
-  outline-offset: 2px;
-}
-
-.toggle-text {
-  color: var(--fg-dim);
-  font-size: 0.9rem;
-}
-
-/* =========================================================
    Result Area
    ========================================================= */
 .result-area {
@@ -383,6 +313,41 @@ body {
 }
 
 .start-date-badge:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
+}
+
+/* Additional data badge — bottom-right of result area */
+.additional-data-badge {
+  position: absolute;
+  bottom: 0.55rem;
+  right: 0.7rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.45rem;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition), background var(--transition);
+  font-family: inherit;
+  line-height: 1;
+}
+
+.additional-data-badge.active {
+  color: var(--cyan);
+}
+
+.additional-data-badge.inactive {
+  color: var(--comment);
+}
+
+.additional-data-badge:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.additional-data-badge:focus-visible {
   outline: 2px solid var(--purple);
   outline-offset: 2px;
 }
