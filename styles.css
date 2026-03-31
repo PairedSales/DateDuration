@@ -266,9 +266,13 @@ body {
    ========================================================= */
 .options-row {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 0.75rem;
+}
+
+.options-row .toggle-label:last-child {
+  margin-left: auto;
 }
 
 /* Custom toggle switch */
