@@ -39,9 +39,10 @@
   const bdSeconds      = document.getElementById('bd-seconds');
 
   // ── State ───────────────────────────────────────────────
-  let startDate    = null;  // JS Date (midnight local)
-  let endDate      = null;  // JS Date (midnight local)
-  let includeStart = true; // whether start date is counted
+  let startDate     = null;  // JS Date (midnight local)
+  let endDate       = null;  // JS Date (midnight local)
+  let includeStart  = true;  // whether start date is counted
+  let showAdditional = false; // whether to show the additional breakdown
 
   // ── Helpers ─────────────────────────────────────────────
 
