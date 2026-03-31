@@ -300,11 +300,11 @@ body {
 }
 
 .start-date-badge.included {
-  color: var(--green);
+  color: var(--comment);
 }
 
 .start-date-badge.excluded {
-  color: var(--comment);
+  color: var(--green);
 }
 
 .start-date-badge:hover {
