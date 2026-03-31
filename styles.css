@@ -335,6 +335,7 @@ body {
    Result Area
    ========================================================= */
 .result-area {
+  position: relative;
   border-radius: var(--radius-md);
   background: var(--bg);
   border: 1.5px dashed var(--line);
@@ -345,6 +346,45 @@ body {
   align-items: center;
   justify-content: center;
   transition: border-color var(--transition), background var(--transition);
+}
+
+/* Start date badge — top-right of result area */
+.start-date-badge {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.7rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.45rem;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition), background var(--transition);
+  font-family: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: transparent;
+}
+
+.start-date-badge.included {
+  color: var(--green);
+}
+
+.start-date-badge.excluded {
+  color: var(--comment);
+}
+
+.start-date-badge:hover {
+  background: rgba(255, 255, 255, 0.07);
+  text-decoration-color: currentColor;
+}
+
+.start-date-badge:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
 }
 
 .result-area.has-result {
