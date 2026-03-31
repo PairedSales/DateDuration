@@ -41,8 +41,7 @@
   // ── State ───────────────────────────────────────────────
   let startDate    = null;  // JS Date (midnight local)
   let endDate      = null;  // JS Date (midnight local)
-  let includeStart = false; // whether start date is counted
-  let showAdditional = false; // whether additional breakdown is shown
+  let includeStart = true; // whether start date is counted
 
   // ── Helpers ─────────────────────────────────────────────
 
