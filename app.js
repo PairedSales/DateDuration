@@ -295,70 +295,173 @@
     }
   }
 
-  /** Show shake + error message, then clear the input. */
+  /** Show error message, DO NOT clear the input. */
   function markInvalid(textEl, errorEl) {
     textEl.classList.add('error');
-    errorEl.textContent = 'Invalid date — please try again';
-    setTimeout(() => {
-      textEl.value = '';
-      textEl.classList.remove('error', 'has-value');
-      errorEl.textContent = '';
-    }, 900);
+    errorEl.textContent = 'Invalid date (MM/DD/YYYY)';
   }
 
   // ── Event handlers ───────────────────────────────────────
 
-  /**
-   * Handle blur / Enter on a text input.
-   * Parse the value; on success update state + picker + style, on failure shake + clear.
-   */
-  function handleTextCommit(textEl, pickerEl, errorEl, isStart) {
-    const raw = textEl.value.trim();
-    if (!raw) {
-      // Cleared intentionally
-      if (isStart) { startDate = null; } else { endDate = null; }
-      setInputValue(textEl, pickerEl, null);
-      update();
-      return;
-    }
-
-    const parsed = parseDate(raw);
-    if (!parsed) {
-      markInvalid(textEl, errorEl);
-      if (isStart) { startDate = null; } else { endDate = null; }
-      update();
-      return;
-    }
-
-    if (isStart) { startDate = parsed; } else { endDate = parsed; }
-    setInputValue(textEl, pickerEl, parsed);
-    errorEl.textContent = '';
-    update();
-  }
-
-  // Text inputs — commit on blur and Enter
+  // Text inputs — commit on blur, handle masks, and keyboard tweaks
   function wireTextInput(textEl, pickerEl, errorEl, isStart) {
-    textEl.addEventListener('blur', () => {
-      handleTextCommit(textEl, pickerEl, errorEl, isStart);
+    let prevValue = '';
+
+    textEl.addEventListener('focus', () => {
+      prevValue = textEl.value;
     });
+
+    textEl.addEventListener('blur', () => {
+      const raw = textEl.value.trim();
+      if (!raw) {
+        if (isStart) { startDate = null; } else { endDate = null; }
+        setInputValue(textEl, pickerEl, null);
+        update();
+        return;
+      }
+      const parsed = parseDate(raw);
+      if (parsed) {
+        if (isStart) { startDate = parsed; } else { endDate = parsed; }
+        setInputValue(textEl, pickerEl, parsed);
+        errorEl.textContent = '';
+        textEl.classList.remove('error');
+        update();
+      } else {
+        markInvalid(textEl, errorEl);
+        if (isStart) { startDate = null; } else { endDate = null; }
+        update();
+      }
+    });
+
     textEl.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
         textEl.blur();
       }
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        const parts = textEl.value.split('/');
+        if (parts.length === 3) {
+          const d = parseDate(textEl.value);
+          if (d) {
+            e.preventDefault();
+            const cursorPos = textEl.selectionStart;
+            let segment = 0;
+            if (cursorPos >= 3 && cursorPos <= 5) segment = 1;
+            else if (cursorPos >= 6) segment = 2;
+            
+            if (segment === 0) d.setMonth(d.getMonth() + (e.key === 'ArrowUp' ? 1 : -1));
+            else if (segment === 1) d.setDate(d.getDate() + (e.key === 'ArrowUp' ? 1 : -1));
+            else d.setFullYear(d.getFullYear() + (e.key === 'ArrowUp' ? 1 : -1));
+            
+            setInputValue(textEl, pickerEl, d);
+            prevValue = textEl.value;
+            
+            if (segment === 0) textEl.setSelectionRange(0, 2);
+            else if (segment === 1) textEl.setSelectionRange(3, 5);
+            else textEl.setSelectionRange(6, 10);
+            
+            if (isStart) { startDate = d; } else { endDate = d; }
+            update(false);
+          }
+        }
+      }
     });
-    // Live feedback: update class while typing, and recalculate as soon as a valid date is recognised.
-    // Pass allowSwap=false so the auto-swap never fires mid-entry (it fires on blur/Enter instead).
-    textEl.addEventListener('input', () => {
-      const raw = textEl.value.trim();
-      if (raw) {
+
+    textEl.addEventListener('input', (e) => {
+      errorEl.textContent = '';
+      textEl.classList.remove('error');
+
+      let raw = textEl.value;
+      if (e.inputType === 'insertFromPaste') {
+         const d = parseDate(raw);
+         if (d) {
+            const f = formatDate(d);
+            textEl.value = f;
+            prevValue = f;
+            textEl.classList.add('has-value');
+            if (isStart) { startDate = d; } else { endDate = d; }
+            pickerEl.value = toPickerValue(d);
+            update(false);
+            return;
+         }
+      }
+
+      const isBackspace = e.inputType === 'deleteContentBackward';
+      let cursorStart = textEl.selectionStart;
+      
+      if (isBackspace && prevValue && prevValue[cursorStart] === '/' && raw === prevValue.slice(0, cursorStart) + prevValue.slice(cursorStart + 1)) {
+        raw = raw.slice(0, cursorStart - 1) + raw.slice(cursorStart);
+        cursorStart--;
+      }
+
+      if (!isBackspace && e.data === '/') {
+         if (raw[cursorStart - 1] === '/') {
+            const beforeSlash = raw.slice(0, cursorStart - 1);
+            const slashesCount = (beforeSlash.match(/\//g) || []).length;
+            if (slashesCount === 0 && beforeSlash.length === 1) {
+               raw = '0' + raw;
+               cursorStart++;
+            } else if (slashesCount === 1 && beforeSlash.length === 4) {
+               raw = raw.slice(0, 3) + '0' + raw.slice(3);
+               cursorStart++;
+            }
+         }
+      }
+
+      const cleaned = raw.replace(/\D/g, '').slice(0, 8);
+      let m = cleaned.slice(0, 2);
+      let dStr = cleaned.slice(2, 4);
+      let y = cleaned.slice(4, 8);
+
+      if (m.length === 2 && parseInt(m) > 12) m = '12';
+      if (m.length === 2 && parseInt(m) === 0) m = '01';
+      if (dStr.length === 2 && parseInt(dStr) > 31) dStr = '31';
+      if (dStr.length === 2 && parseInt(dStr) === 0) dStr = '01';
+
+      let formatted = m;
+      if (cleaned.length >= 3 || (cleaned.length === 2 && !isBackspace)) formatted += '/';
+      formatted += dStr;
+      if (cleaned.length >= 5 || (cleaned.length === 4 && !isBackspace)) formatted += '/';
+      formatted += y;
+
+      textEl.value = formatted;
+
+      let nonDigitsBeforeCursor = 0;
+      for (let i = 0; i < cursorStart; i++) {
+        if (!/\d/.test(raw[i])) nonDigitsBeforeCursor++;
+      }
+      let digitsBeforeCursor = cursorStart - nonDigitsBeforeCursor;
+      
+      let newCursor = 0;
+      let digitsCount = 0;
+      for (let i = 0; i < formatted.length; i++) {
+        if (digitsCount === digitsBeforeCursor) {
+          newCursor = i;
+          break;
+        }
+        if (/\d/.test(formatted[i])) digitsCount++;
+        newCursor = i + 1;
+      }
+
+      if (!isBackspace && formatted[newCursor] === '/') {
+        newCursor++;
+      }
+
+      textEl.setSelectionRange(newCursor, newCursor);
+      prevValue = formatted;
+
+      if (formatted.trim()) {
         textEl.classList.add('has-value');
-        const parsed = parseDate(raw);
-        if (parsed) {
-          if (isStart) { startDate = parsed; } else { endDate = parsed; }
-          pickerEl.value = toPickerValue(parsed);
-          errorEl.textContent = '';
-          update(false);
+        if (formatted.length === 10) {
+          const parsed = parseDate(formatted);
+          if (parsed) {
+            if (isStart) { startDate = parsed; } else { endDate = parsed; }
+            pickerEl.value = toPickerValue(parsed);
+            update(false);
+          }
+        } else {
+           if (isStart) { startDate = null; } else { endDate = null; }
+           update(false);
         }
       } else {
         textEl.classList.remove('has-value');
