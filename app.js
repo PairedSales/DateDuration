@@ -513,4 +513,10 @@
   wirePickerChange(startPicker, startText, startError, true);
   wirePickerChange(endPicker,   endText,   endError,   false);
 
+  // Put keyboard focus in Start Date on initial page load.
+  requestAnimationFrame(() => {
+    startText.focus();
+    startText.setSelectionRange(startText.value.length, startText.value.length);
+  });
+
 })();
